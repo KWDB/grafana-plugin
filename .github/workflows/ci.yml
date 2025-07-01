@@ -165,39 +165,6 @@ jobs:
       - name: Install dev dependencies
         run: npm ci
 
-      # - name: Start KWDB
-      #   run: |
-      #     docker run -d --privileged --name kwdb \
-      #       --ulimit memlock=-1 \
-      #       -p 26257:26257 \
-      #       -p 8080:8080 \
-      #        -v /var/lib/kaiwudb:/kaiwudb/deploy/kaiwudb-container \
-      #       --ipc shareable \
-      #       -w /kaiwudb/bin \
-      #       kwdb/kwdb \
-      #       ./kwbase start-single-node \
-      #           --insecure \
-      #           --listen-addr=0.0.0.0:26257 \
-      #           --http-addr=0.0.0.0:8080 \
-      #           --store=/kaiwudb/deploy/kaiwudb-container
-
-      # - name: Wait for KWDB to be ready
-      #   run: |
-      #     echo "Waiting for KWDB to be ready..."
-      #     timeout 60 bash -c 'until docker exec kwdb ./kwbase sql --insecure --host=127.0.0.1 -e "SELECT 1"; do sleep 2; done'
-      #     echo "KWDB is ready!"
-
-      # - name: Initialize test data
-      #   run: |
-      #     docker exec kwdb ./kwbase sql --insecure --host=127.0.0.1 -e "
-      #       CREATE TABLE test_data (
-      #           id SERIAL PRIMARY KEY,
-      #           value INTEGER NOT NULL
-      #       );
-      #       INSERT INTO test_data (value) VALUES (10), (20);
-      #       SELECT value FROM test_data;
-      #     "
-
       - name: Start Grafana
         run: |
           docker compose pull
@@ -214,7 +181,6 @@ jobs:
       - name: Run Playwright tests
         id: run-tests
         run: |
-          docker ps
           npm run e2e
 
       - name: Upload e2e test summary
