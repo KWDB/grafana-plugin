@@ -37,7 +37,16 @@
         "url": "https://www.kaiwudb.com/kaiwudb_docs/#/oss_dev/" 
       }
     ],
-    "screenshots": [],
+    "screenshots": [
+      {
+        "name": "config",
+        "path": "assets/config.png"
+      },
+      {
+        "name": "query",
+        "path": "assets/query.png"
+      }
+    ],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },
