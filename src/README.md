@@ -1,8 +1,6 @@
-<!-- This README file is going to be the one displayed on the Grafana.com website for your plugin. Uncomment and replace the content here before publishing.
+# KWDB Data Source
 
-Remove any remaining comments before publishing as these may be displayed on Grafana.com -->
-
-# KWDB
+KWDB Data Source is a plugin for Grafana that allows you to query and visualize data from KWDB.
 
 <!-- To help maximize the impact of your README and improve usability for users, we propose the following loose structure:
 
@@ -27,24 +25,19 @@ to create dynamic badges that update automatically when you publish a new versio
 
 Full example: ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?logo=grafana&query=$.version&url=https://grafana.com/api/plugins/grafana-polystat-panel&label=Marketplace&prefix=v&color=F47A20)
 
-Consider other [badges](https://shields.io/badges) as you feel appropriate for your project.
+Consider other [badges](https://shields.io/badges) as you feel appropriate for your project. -->
 
-## Overview / Introduction
-Provide one or more paragraphs as an introduction to your plugin to help users understand why they should use it.
+## Adding the data source
 
-Consider including screenshots:
-- in [plugin.json](https://grafana.com/developers/plugin-tools/reference/plugin-json#info) include them as relative links.
-- in the README ensure they are absolute URLs.
+To add the KWDB data source to Grafana, follow these steps:
 
-## Requirements
-List any requirements or dependencies they may need to run the plugin.
-
-## Getting Started
-Provide a quick start on how to configure and use the plugin.
-
-## Documentation
-If your project has dedicated documentation available for users, provide links here. For help in following Grafana's style recommendations for technical documentation, refer to our [Writer's Toolkit](https://grafana.com/docs/writers-toolkit/).
+1. In Grafana, go to **Connection** > **Add new connection**.
+2. Select **KWDB** from the list of data sources.
+3. Click **Add new data source**.
+4. Enter the name of the data source.
+5. Enter the Connection and Authentication info of the KWDB instance.
+6. Click **Save & Test**.
 
 ## Contributing
-Do you want folks to contribute to the plugin or provide feedback through specific means? If so, tell them how!
--->
+
+Contributions are welcome! Please feel free to submit issues and pull requests.

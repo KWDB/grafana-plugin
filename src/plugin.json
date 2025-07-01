@@ -2,21 +2,41 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
   "name": "KWDB",
-  "id": "kwdb-kwdb-datasource",
+  "id": "kwdb-datasource",
   "metrics": true,
   "backend": true,
   "executable": "gpx_kwdb",
   "info": {
-    "description": "",
+    "description": "Open source multi-model database",
     "author": {
-      "name": "Kwdb"
+      "name": "KaiwuDB",
+      "url": "https://www.kaiwudb.com/"
     },
-    "keywords": ["datasource"],
+    "keywords": [
+      "kwdb",
+      "multi-model",
+      "database",
+      "time-series",
+      "datasource"
+    ],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
     },
-    "links": [],
+    "links": [
+      {
+        "name": "GitHub",
+        "url": "https://github.com/kwdb/kwdb"
+      },
+      { 
+        "name": "Raise issue", 
+        "url": "https://github.com/kwdb/kwdb/issues/new" 
+      },
+      { 
+        "name": "Documentation", 
+        "url": "https://www.kaiwudb.com/kaiwudb_docs/#/oss_dev/" 
+      }
+    ],
     "screenshots": [],
     "version": "%VERSION%",
     "updated": "%TODAY%"

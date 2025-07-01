@@ -2,13 +2,16 @@ apiVersion: 1
 
 datasources:
   - name: 'KWDB'
-    type: 'kwdb-kwdb-datasource'
+    type: 'kwdb-datasource'
     access: proxy
     isDefault: false
     orgId: 1
     version: 1
     editable: true
     jsonData:
-      path: '/resources'
+      host: 'kwdb-test-db'
+      port: 26257
+      database: 'defaultdb'
+      username: 'root'
     secureJsonData:
-      apiKey: 'api-key'
+      password: ''

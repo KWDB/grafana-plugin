@@ -1,10 +1,134 @@
-# Grafana data source plugin template
+# KWDB Grafana Plugin
 
-This template is a starting point for building a Data Source Plugin for Grafana.
+**KWDB is a distributed multi-model database designed for AIoT scenarios and incubated by the OpenAtom Foundation.​**​ Originating from Inspur's KaiwuDB project, it supports the concurrent creation of time-series and relational databases within the same instance and the integrated processing of multi-model data.
 
-## What are Grafana data source plugins?
+KWDB data source plugin for Grafana enables you to query and visualize metrics from the KWDB database. It supports both time-series and relational data with a rich set of features for database connectivity and query management.
 
-Grafana supports a wide range of data sources, including Prometheus, MySQL, and even Datadog. There’s a good chance you can already visualize metrics from the systems you have set up. In some cases, though, you already have an in-house metrics solution that you’d like to add to your Grafana dashboards. Grafana Data Source Plugins enables integrating such solutions with Grafana.
+![Config Screenshot](assets/config.png)
+![Query Screenshot](assets/query.png)
+
+## Features
+
+### 📝 **Advanced SQL Query Editor**
+- Syntax-highlighted SQL code editor with line numbers
+- Built-in SQL query formatting using Prettier
+- Real-time query execution with loading states
+- Support for multi-line complex SQL queries
+
+### 🕒 **Time-Series Support**
+- Built-in Grafana time range macros:
+  - `$from` - Start time of the selected time range
+  - `$to` - End time of the selected time range  
+  - `$interval` - Time interval based on the selected time range
+- Template variable support for dynamic queries
+
+### 🎯 **User Experience**
+- Interactive query help and cheat sheet
+- Comprehensive error handling and user feedback
+- Responsive UI components with proper validation
+
+
+## Installation
+
+### From Grafana Plugin Catalog
+1. In your Grafana instance, go to **Administration** > **Plugins**
+2. Search for "KWDB" in the plugin catalog
+3. Click **Install** to add the plugin to your Grafana instance
+
+### Manual Installation
+1. Download the latest release from the [GitHub releases page](https://github.com/KWDB/grafana-plugin/releases)
+2. Extract the plugin to your Grafana plugins directory
+3. Restart your Grafana instance
+
+## Configuration
+
+### Adding the Data Source
+
+1. In Grafana, navigate to **Connections** > **Add new connection**
+2. Search for and select **KWDB** from the list of available data sources
+3. Click **Add new data source**
+4. Configure the connection settings:
+
+#### Connection Settings
+- **Host URL**: Your KWDB server address (e.g., `localhost`)
+- **Port**: KWDB server port (default: `26257`)
+- **Database name**: Target database name (default: `defaultdb`)
+
+#### Authentication
+- **Username**: Database user account (default: `root`)
+- **Password**: Database user password (stored securely)
+
+⚠️ **Security Recommendation**: For production use, create a dedicated database user with **SELECT-only** permissions on the specific databases and tables needed for your dashboards.
+
+5. Click **Save & Test** to verify the connection
+
+## Usage
+
+### Writing Queries
+
+1. Create a new dashboard or edit an existing one
+2. Add a new panel and select your KWDB data source
+3. Write your SQL query in the query editor:
+
+```sql
+SELECT 
+  time_column,
+  value_column
+FROM your_table 
+WHERE time_column >= $from 
+  AND time_column <= $to
+ORDER BY time_column
+```
+
+### Using Time Range Macros
+
+KWDB data source supports Grafana's time range macros:
+
+- `$from` - Replaced with the start time of the dashboard's time range
+- `$to` - Replaced with the end time of the dashboard's time range
+- `$interval` - Replaced with a time interval suitable for the current time range
+
+### Query Formatting
+
+Use the **Format SQL** button in the query editor to automatically format your SQL queries for better readability.
+
+## Troubleshooting
+
+### Common Issues
+
+#### Connection Failed
+- Verify that your KWDB server is running and accessible
+- Check that the host and port are correct
+- Ensure the database name exists
+- Verify username and password credentials
+- Check firewall settings and network connectivity
+
+#### Query Errors
+- Ensure your SQL syntax is compatible with KWDB
+- Verify that referenced tables and columns exist
+- Check that the database user has SELECT permissions on the queried tables
+- Use the query formatter to identify syntax issues
+
+#### No Data Returned
+- Verify that your time range macros (`$from`, `$to`) are used correctly
+- Check that your time column data type is compatible
+- Ensure your WHERE clause filters are appropriate for the selected time range
+
+### Getting Help
+
+- 📖 [KWDB Documentation](https://www.kaiwudb.com/kaiwudb_docs/#/oss_dev/)
+- 🐛 [Report Issues](https://github.com/kwdb/kwdb/issues/new)
+- 💬 [GitHub Discussions](https://github.com/kwdb/kwdb)
+
+## Development
+
+This section is for developers who want to contribute to or modify the KWDB Grafana plugin.
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- Go 1.21+
+- Grafana 10.4.0+
 
 ## Getting started
 
@@ -88,49 +212,24 @@ Grafana supports a wide range of data sources, including Prometheus, MySQL, and 
    npm run lint:fix
    ```
 
-# Distributing your plugin
+## Contributing
 
-When distributing a Grafana plugin either within the community or privately the plugin must be signed so the Grafana application can verify its authenticity. This can be done with the `@grafana/sign-plugin` package.
+We welcome contributions to the KWDB Grafana plugin! Here's how you can help:
 
-_Note: It's not necessary to sign a plugin during development. The docker development environment that is scaffolded with `@grafana/create-plugin` caters for running the plugin without a signature._
+### Reporting Issues
+- Use the [GitHub issue tracker](https://github.com/kwdb/kwdb/issues/new) to report bugs
+- Provide detailed information about your environment and steps to reproduce
+- Include relevant logs and error messages
 
-## Initial steps
+### Contributing Code
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes and add tests
+4. Ensure all tests pass (`npm run test` and `npm run e2e`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
-Before signing a plugin please read the Grafana [plugin publishing and signing criteria](https://grafana.com/legal/plugins/#plugin-publishing-and-signing-criteria) documentation carefully.
+## License
 
-`@grafana/create-plugin` has added the necessary commands and workflows to make signing and distributing a plugin via the grafana plugins catalog as straightforward as possible.
-
-Before signing a plugin for the first time please consult the Grafana [plugin signature levels](https://grafana.com/legal/plugins/#what-are-the-different-classifications-of-plugins) documentation to understand the differences between the types of signature level.
-
-1. Create a [Grafana Cloud account](https://grafana.com/signup).
-2. Make sure that the first part of the plugin ID matches the slug of your Grafana Cloud account.
-   - _You can find the plugin ID in the `plugin.json` file inside your plugin directory. For example, if your account slug is `acmecorp`, you need to prefix the plugin ID with `acmecorp-`._
-3. Create a Grafana Cloud API key with the `PluginPublisher` role.
-4. Keep a record of this API key as it will be required for signing a plugin
-
-## Signing a plugin
-
-### Using Github actions release workflow
-
-If the plugin is using the github actions supplied with `@grafana/create-plugin` signing a plugin is included out of the box. The [release workflow](./.github/workflows/release.yml) can prepare everything to make submitting your plugin to Grafana as easy as possible. Before being able to sign the plugin however a secret needs adding to the Github repository.
-
-1. Please navigate to "settings > secrets > actions" within your repo to create secrets.
-2. Click "New repository secret"
-3. Name the secret "GRAFANA_API_KEY"
-4. Paste your Grafana Cloud API key in the Secret field
-5. Click "Add secret"
-
-#### Push a version tag
-
-To trigger the workflow we need to push a version tag to github. This can be achieved with the following steps:
-
-1. Run `npm version <major|minor|patch>`
-2. Run `git push origin main --follow-tags`
-
-## Learn more
-
-Below you can find source code for existing app plugins and other related documentation.
-
-- [Basic data source plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/datasource-basic#readme)
-- [`plugin.json` documentation](https://grafana.com/developers/plugin-tools/reference/plugin-json)
-- [How to sign a plugin?](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.

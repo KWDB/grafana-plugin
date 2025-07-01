@@ -1,45 +1,83 @@
-import React, { ChangeEvent } from 'react';
-import { InlineField, Input, Stack } from '@grafana/ui';
+import React, { useState } from 'react';
+import { CodeEditor, Button } from '@grafana/ui';
 import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from '../datasource';
 import { MyDataSourceOptions, MyQuery } from '../types';
 
+import prettier from 'prettier';
+import sqlPlugin from 'prettier-plugin-sql';
+
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
 export function QueryEditor({ query, onChange, onRunQuery }: Props) {
-  const onQueryTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange({ ...query, queryText: event.target.value });
+  const [isExecuting, setIsExecuting] = useState(false);
+
+  const onQueryTextChange = (newText: string) => {
+    onChange({ ...query, queryText: newText });
   };
 
-  const onConstantChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange({ ...query, constant: parseFloat(event.target.value) });
-    // executes the query
-    onRunQuery();
+  const executeQuery = async () => {
+    if (!query.queryText) {
+      return;
+    }
+    setIsExecuting(true);
+    try {
+      await onRunQuery();
+    } finally {
+      setIsExecuting(false);
+    }
   };
 
-  const { queryText, constant } = query;
+  const onFormatQuery = async () => {
+    if (!queryText?.trim()) {
+      return;
+    }
+
+    try {
+      const formattedQuery = await prettier.format(queryText, {
+        parser: 'sql',
+        plugins: [sqlPlugin],
+        printWidth: 120,
+        tabWidth: 2,
+        useTabs: false,
+        singleQuote: true,
+      });
+      onQueryTextChange(formattedQuery);
+    } catch (error) {
+      alert(
+        'SQL formatting failed. Please check if the syntax is correct.\nError message: ' + (error as Error).message
+      );
+    }
+  };
+
+  const { queryText } = query;
 
   return (
-    <Stack gap={0}>
-      <InlineField label="Constant">
-        <Input
-          id="query-editor-constant"
-          onChange={onConstantChange}
-          value={constant}
-          width={8}
-          type="number"
-          step="0.1"
-        />
-      </InlineField>
-      <InlineField label="Query Text" labelWidth={16} tooltip="Not used yet">
-        <Input
-          id="query-editor-query-text"
-          onChange={onQueryTextChange}
-          value={queryText || ''}
-          required
-          placeholder="Enter a query"
-        />
-      </InlineField>
-    </Stack>
+    <div data-testid="editor-container">
+      <CodeEditor
+        language="sql"
+        height="200px"
+        data-testid="editor-input"
+        value={queryText || ''}
+        showLineNumbers
+        onChange={(newText) => onQueryTextChange(newText)}
+      />
+      <div style={{ marginTop: 8 }}>
+        <Button 
+          data-testid="run-query-button"
+          onClick={executeQuery} disabled={isExecuting || !queryText}>
+          {isExecuting ? 'Executing...' : 'Run Query'}
+        </Button>
+        <Button
+          variant="secondary"
+          data-testid="format-sql-button"
+          onClick={onFormatQuery}
+          disabled={isExecuting || !queryText}
+          style={{ marginLeft: 8 }}
+        >
+          Format SQL
+        </Button>
+      </div>
+    </div>
   );
 }

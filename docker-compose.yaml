@@ -1,5 +1,54 @@
 services:
+  kwdb:
+    image: kwdb/kwdb
+    container_name: 'kwdb-test-db'
+    ports:
+      - 26257:26257
+      - 8080:8080
+    ulimits:
+      memlock: -1
+    environment:
+      - LD_LIBRARY_PATH=/kaiwudb/lib
+    tty: true
+    working_dir: /kaiwudb/bin
+    healthcheck:
+      test: ["CMD-SHELL", "/kaiwudb/bin/kwbase sql --insecure --host=127.0.0.1 -e 'SELECT 1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - grafana-network
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        /kaiwudb/bin/kwbase start-single-node --insecure --listen-addr=0.0.0.0:26257 --advertise-addr=kwdb-test-db:26257 --http-addr=0.0.0.0:8080 --store=/kaiwudb/deploy/kaiwudb
+  kwdb-init:
+    image: kwdb/kwdb
+    depends_on:
+      kwdb:
+        condition: service_healthy
+    networks:
+      - grafana-network
+    command: |
+      /bin/bash -c '
+        echo "KWDB is healthy, initializing test data..."
+        /kaiwudb/bin/kwbase sql --insecure --host=kwdb-test-db --execute="
+          CREATE TABLE IF NOT EXISTS test_data (
+            id SERIAL PRIMARY KEY,
+            value INTEGER NOT NULL,
+            timestamp TIMESTAMPTZ DEFAULT NOW()
+          );
+          INSERT INTO test_data (value) VALUES (10), (20);
+        "
+        echo "Test data initialization completed!"
+      '
+    restart: "no"
   grafana:
     extends:
       file: .config/docker-compose-base.yaml
       service: grafana
+
+networks:
+  grafana-network:
+    driver: bridge

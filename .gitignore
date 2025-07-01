@@ -44,3 +44,9 @@ ci/
 .idea
 
 .eslintcache
+
+# asdf
+.tool-versions
+
+# vscode
+.vscode
