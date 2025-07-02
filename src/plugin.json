@@ -40,11 +40,11 @@
     "screenshots": [
       {
         "name": "config",
-        "path": "../assets/config.png"
+        "path": "img/config.png"
       },
       {
         "name": "query",
-        "path": "../assets/query.png"
+        "path": "img/query.png"
       }
     ],
     "version": "%VERSION%",

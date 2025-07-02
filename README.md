@@ -4,8 +4,8 @@
 
 KWDB data source plugin for Grafana enables you to query and visualize metrics from the KWDB database. It supports both time-series and relational data with a rich set of features for database connectivity and query management.
 
-![Config Screenshot](assets/config.png)
-![Query Screenshot](assets/query.png)
+![Config Screenshot](src/img/config.png)
+![Query Screenshot](src/img/query.png)
 
 ## Features
 
