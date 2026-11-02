@@ -1,5 +1,16 @@
 # KWDB Grafana Plugin
 
+> [!WARNING]
+> **This repository is archived and no longer maintained.** It contains the
+> legacy v1.0.0 KWDB Grafana plugin. The actively maintained plugin is
+> **[KWDB/kwdb-grafana-plugin](https://github.com/KWDB/kwdb-grafana-plugin)**
+> (v1.4.0 or newer).
+>
+> The legacy plugin uses the same Grafana plugin ID (`kwdb-datasource`) but a
+> different configuration schema and different time macros, so it cannot be
+> upgraded in place. Do not install the v1.0.0 release from this repository.
+> See [Migrating from the legacy plugin](#migrating-from-the-legacy-plugin).
+
 **KWDB is a distributed multi-model database designed for AIoT scenarios and incubated by the OpenAtom Foundation.​**​ Originating from Inspur's KaiwuDB project, it supports the concurrent creation of time-series and relational databases within the same instance and the integrated processing of multi-model data.
 
 KWDB data source plugin for Grafana enables you to query and visualize metrics from the KWDB database. It supports both time-series and relational data with a rich set of features for database connectivity and query management.
@@ -8,6 +19,9 @@ KWDB data source plugin for Grafana enables you to query and visualize metrics f
 ![Query Screenshot](src/img/query.png)
 
 ## Features
+
+The feature list below describes the legacy v1.0.0 implementation and is kept
+for historical reference.
 
 ### 📝 **Advanced SQL Query Editor**
 - Syntax-highlighted SQL code editor with line numbers
@@ -30,17 +44,50 @@ KWDB data source plugin for Grafana enables you to query and visualize metrics f
 
 ## Installation
 
-### From Grafana Plugin Catalog
-1. In your Grafana instance, go to **Administration** > **Plugins**
-2. Search for "KWDB" in the plugin catalog
-3. Click **Install** to add the plugin to your Grafana instance
+The v1.0.0 builds in this repository are unsupported. Install the maintained
+plugin from
+[KWDB/kwdb-grafana-plugin](https://github.com/KWDB/kwdb-grafana-plugin) instead:
 
-### Manual Installation
-1. Download the latest release from the [GitHub releases page](https://github.com/KWDB/grafana-plugin/releases)
-2. Extract the plugin to your Grafana plugins directory
-3. Restart your Grafana instance
+1. Install the plugin: use the Grafana plugin catalog once the maintained plugin
+   is published, or extract a release archive from the
+   [maintained repository's releases](https://github.com/KWDB/kwdb-grafana-plugin/releases)
+   into your Grafana plugins directory.
+2. Restart Grafana after a manual installation.
+3. Add a **KWDB TSDB** data source.
+
+If the legacy plugin is installed, remove it before installing the maintained
+plugin. Both use the plugin ID `kwdb-datasource`, so a leftover installation can
+mix old and new binaries.
+
+## Migrating from the legacy plugin
+
+The maintained plugin is not a drop-in upgrade for this legacy v1.0.0 build:
+
+- **Configuration**: the database user is stored in `user` instead of
+  `username`, and the maintained plugin adds `sslMode` and `sslRootCert`
+  options. Recreate the data source and fill in the user again.
+- **Time macros**: replace the legacy `$from` / `$to` / `$interval` macros with
+  the standard Grafana macros `$__timeFrom` / `$__timeTo` /
+  `$__timeFilter(column)` / `$__timeGroup(column, 'interval')`.
+- **Dashboards**: update panels that use the old macros; unchanged legacy
+  queries return errors or empty results.
+
+To migrate:
+
+1. Note the data source settings and dashboard queries you still need.
+2. Remove the legacy plugin from the Grafana plugins directory.
+3. Install the maintained plugin (see [Installation](#installation)).
+4. Create a new `KWDB TSDB` data source and click **Save & test**.
+5. Update the dashboard queries to the new macros.
+
+See the [maintained plugin's README](https://github.com/KWDB/kwdb-grafana-plugin#readme)
+for its full configuration and query syntax.
 
 ## Configuration
+
+> The steps below describe the legacy v1.0.0 plugin. The maintained plugin has a
+> different configuration page; see its
+> [README](https://github.com/KWDB/kwdb-grafana-plugin#readme).
 
 ### Adding the Data Source
 
@@ -63,6 +110,9 @@ KWDB data source plugin for Grafana enables you to query and visualize metrics f
 5. Click **Save & Test** to verify the connection
 
 ## Usage
+
+> Queries below use the legacy v1.0.0 macros. The maintained plugin uses
+> `$__timeFrom`, `$__timeTo`, `$__timeFilter`, and `$__timeGroup` instead.
 
 ### Writing Queries
 
@@ -116,13 +166,15 @@ Use the **Format SQL** button in the query editor to automatically format your S
 
 ### Getting Help
 
-- 📖 [KWDB Documentation](https://www.kaiwudb.com/kaiwudb_docs/#/oss_dev/)
-- 🐛 [Report Issues](https://github.com/kwdb/kwdb/issues/new)
-- 💬 [GitHub Discussions](https://github.com/kwdb/kwdb)
+- 📖 [KWDB Documentation](https://www.kaiwudb.com/community)
+- 🔌 [Maintained plugin](https://github.com/KWDB/kwdb-grafana-plugin)
+- 🐛 [Report Issues](https://github.com/KWDB/kwdb-grafana-plugin/issues)
 
 ## Development
 
-This section is for developers who want to contribute to or modify the KWDB Grafana plugin.
+This section documents the legacy v1.0.0 development setup and is kept for
+historical reference. Development has moved to
+[KWDB/kwdb-grafana-plugin](https://github.com/KWDB/kwdb-grafana-plugin).
 
 ### Prerequisites
 
@@ -214,21 +266,9 @@ This section is for developers who want to contribute to or modify the KWDB Graf
 
 ## Contributing
 
-We welcome contributions to the KWDB Grafana plugin! Here's how you can help:
-
-### Reporting Issues
-- Use the [GitHub issue tracker](https://github.com/kwdb/kwdb/issues/new) to report bugs
-- Provide detailed information about your environment and steps to reproduce
-- Include relevant logs and error messages
-
-### Contributing Code
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes and add tests
-4. Ensure all tests pass (`npm run test` and `npm run e2e`)
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
+This repository is archived and no longer accepts contributions. Open issues
+and pull requests in the maintained repository instead:
+[KWDB/kwdb-grafana-plugin](https://github.com/KWDB/kwdb-grafana-plugin).
 
 ## License
 

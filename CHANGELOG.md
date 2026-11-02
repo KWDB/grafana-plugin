@@ -1,5 +1,11 @@
 # Changelog
 
+## Archived
+
+This repository is archived; the plugin is superseded by
+[KWDB/kwdb-grafana-plugin](https://github.com/KWDB/kwdb-grafana-plugin) v1.4.0.
+No further releases will be published from this repository.
+
 ## 1.0.0
 
 Initial KWDB Grafana Plugin
